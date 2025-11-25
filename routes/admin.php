@@ -1,0 +1,73 @@
+<?php
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\AdminEventJoinController;
+use App\Http\Controllers\RoleAccessController;
+use Illuminate\Support\Facades\Route;
+
+
+
+// Login Routes
+Route::get('/login', [AdminAuthController::class, 'showLogin'])
+    ->name('admin.login')
+    ->middleware('guest:admin');
+
+Route::post('/login', [AdminAuthController::class, 'login'])
+    ->name('admin.login.submit')
+    ->middleware('guest:admin');
+
+// Protected Routes
+Route::middleware('auth.admin')->group(function () {
+
+    Route::get('/dashboard', function () {
+        return inertia('Dashboard');
+    })->name('admin.dashboard');
+
+    Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::post('/users/{id}/toggle-active', [AdminUserController::class, 'toggleActive'])->name('admin.users.toggleActive');
+
+    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+
+    // Events
+    Route::get('/events', [EventController::class, 'index'])->name('admin.events.index');
+    Route::post('/events', [EventController::class, 'store'])->name('admin.events.store');
+    Route::post('/events/{id}', [EventController::class, 'update'])->name('admin.events.update');
+    Route::post('/events/{id}/toggle-publish', [EventController::class, 'togglePublish'])->name('admin.events.togglePublish');
+    Route::post('/events/{id}/delete', [EventController::class, 'destroy'])->name('admin.events.destroy');
+    Route::get('/events/{id}/joins', [AdminEventJoinController::class, 'index'])->name('admin.events.joins');
+
+    // Role Access Management
+    Route::get('/access', [RoleAccessController::class, 'index'])->name('admin.access.index');
+    Route::get('/access/create', [RoleAccessController::class, 'create'])->name('admin.access.create');
+    Route::post('/access/store', [RoleAccessController::class, 'store'])->name('admin.access.store');
+    Route::get('/access/{id}/edit', [RoleAccessController::class, 'edit'])->name('admin.access.edit');
+    Route::put('/access/{id}', [RoleAccessController::class, 'update'])->name('admin.access.update');
+    Route::post('/access/toggle/{id}', [RoleAccessController::class, 'toggle'])
+        ->name('admin.access.toggle');
+    Route::delete('/access/delete/{id}', [RoleAccessController::class, 'destroy'])
+        ->name('admin.access.delete');
+
+});
+
+
+// Only Admin
+Route::middleware(['auth:employee', 'role:admin'])->group(function () {
+    Route::get('/admin-panel', function () {
+        return "Admin Panel";
+    });
+});
+
+// Only Manager + Admin
+Route::middleware(['auth:role', 'role:admin,manager'])->group(function () {
+    Route::get('/manage-users', function () {
+        return "Users Management";
+    });
+});
+
+// Employee
+Route::middleware(['auth:role', 'role:employee'])->group(function () {
+    Route::get('/employee/dashboard', function () {
+        return "Employee Dashboard";
+    });
+});
