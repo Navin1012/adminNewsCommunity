@@ -169,8 +169,8 @@ export default function AccessIndex({ roles }) {
                                     </button>
                                     <button
                                         type="submit"
-                                        className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition font-medium flex items-center justify-center gap-2"
-                                    >
+                                       className="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 transition-colors duration-200"
+            >
                                         <MagnifyingGlassIcon className="w-4 h-4" />
                                         Search
                                     </button>
@@ -183,8 +183,8 @@ export default function AccessIndex({ roles }) {
                     <div className="flex justify-end">
                         <button
                             onClick={openCreate}
-                            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-semibold shadow-lg shadow-indigo-500/25 hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 hover:shadow-xl hover:scale-105 group"
-                        >
+                            className="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 transition-colors duration-200"
+            >
                             <PlusIcon className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform" />
                             Add New Employee
                         </button>
@@ -223,7 +223,7 @@ export default function AccessIndex({ roles }) {
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-semibold text-sm">
+                                                <div className="w-8 h-8 bg-gradient-to-br bg-gray-800 text-white to-purple-600 rounded-lg flex items-center justify-center  font-semibold text-sm">
                                                     {r.name?.charAt(0).toUpperCase()}
                                                 </div>
                                                 <div className="text-sm font-medium text-gray-900">

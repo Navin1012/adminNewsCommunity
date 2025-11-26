@@ -389,8 +389,8 @@ export default function AccessUserForm({ user = null, onSubmit, submitText = "Cr
                     <button
                         type="submit"
                         disabled={processing}
-                        className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/25 hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-xl flex items-center gap-2"
-                    >
+                               className="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 transition-colors duration-200"
+            > 
                         {processing ? (
                             <>
                                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, usePage } from '@inertiajs/react';
-import { 
+import {
   ArrowPathIcon,
   MagnifyingGlassIcon,
   Squares2X2Icon,
@@ -212,9 +212,7 @@ export default function UsersIndex({ users, filters }) {
                 {/* Apply Button */}
                 <button
                   type="submit"
-                  className="px-10 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl 
-                   hover:from-blue-700 hover:to-indigo-700 transition font-medium shadow-lg
-                   flex items-center gap-2"
+                  className="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 transition-colors duration-200"
                 >
                   <MagnifyingGlassIcon className="w-5 h-5" />
                   Apply Filters
@@ -251,7 +249,8 @@ export default function UsersIndex({ users, filters }) {
                     {/* USER ICON */}
                     <div
                       className="
-      w-14 h-14 bg-gradient-to-br from-blue-600 to-purple-600 
+      w-14 h-14 bg-gradient-to-br  text-white
+                                  bg-gray-800 hover:bg-gray-900 to-purple-600 
       rounded-2xl text-white flex items-center justify-center 
       text-xl font-bold shadow-lg group-hover:scale-105 transition
     "
@@ -317,11 +316,10 @@ export default function UsersIndex({ users, filters }) {
                       <CreditCardIcon className="w-5 h-5 text-gray-600 mt-0.5" />
                       <div className="flex-1 min-w-0">
                         <span className="text-gray-500 font-medium">Payment</span>
-                        <div className={`font-semibold mt-0.5 truncate ${
-                          u.payment_status === 'paid' ? 'text-green-600' : 
-                          u.payment_status === 'pending' ? 'text-yellow-600' : 
-                          'text-red-600'
-                        }`}>
+                        <div className={`font-semibold mt-0.5 truncate ${u.payment_status === 'paid' ? 'text-green-600' :
+                            u.payment_status === 'pending' ? 'text-yellow-600' :
+                              'text-red-600'
+                          }`}>
                           {u.payment_status || "Not Set"}
                         </div>
                       </div>
@@ -332,9 +330,8 @@ export default function UsersIndex({ users, filters }) {
                       <StarIcon className="w-5 h-5 text-gray-600 mt-0.5" />
                       <div className="flex-1 min-w-0">
                         <span className="text-gray-500 font-medium">Premium</span>
-                        <div className={`font-semibold mt-0.5 truncate ${
-                          u.premium ? 'text-amber-600' : 'text-gray-600'
-                        }`}>
+                        <div className={`font-semibold mt-0.5 truncate ${u.premium ? 'text-amber-600' : 'text-gray-600'
+                          }`}>
                           {u.premium ? "Premium User" : "Free User"}
                         </div>
                       </div>
@@ -345,9 +342,8 @@ export default function UsersIndex({ users, filters }) {
                       <CheckBadgeIcon className="w-5 h-5 text-gray-600 mt-0.5" />
                       <div className="flex-1 min-w-0">
                         <span className="text-gray-500 font-medium">Email</span>
-                        <div className={`font-semibold mt-0.5 truncate ${
-                          u.email_verified_at ? 'text-green-600' : 'text-red-600'
-                        }`}>
+                        <div className={`font-semibold mt-0.5 truncate ${u.email_verified_at ? 'text-green-600' : 'text-red-600'
+                          }`}>
                           {u.email_verified_at ? "Verified" : "Not Verified"}
                         </div>
                       </div>
@@ -414,7 +410,7 @@ export default function UsersIndex({ users, filters }) {
                         {/* USER INFO */}
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-4">
-                            <div className="w-11 h-11 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-semibold shadow-sm">
+                            <div className="w-11 h-11 bg-gradient-to-br bg-gray-800 hover:bg-gray-900 to-purple-600  rounded-xl flex items-center justify-center text-white font-semibold shadow-sm">
                               <UserIcon className="w-5 h-5" />
                             </div>
 

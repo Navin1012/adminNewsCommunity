@@ -51,7 +51,7 @@ export default function Index({ events, filters }) {
 
     if (diffDays < 0) return { text: 'Past Event', color: 'text-red-600', bg: 'bg-red-100' };
     if (diffDays === 0) return { text: 'Today', color: 'text-green-600', bg: 'bg-green-100' };
-    if (diffDays === 1) return { text: 'Tomorrow', color: 'text-blue-600', bg: 'bg-blue-100' };
+    if (diffDays === 1) return { text: 'Tomorrow', color: 'to-purple-600', bg: 'bg-blue-100' };
     if (diffDays <= 7) return { text: `${diffDays} days`, color: 'text-purple-600', bg: 'bg-purple-100' };
     return { text: `${Math.ceil(diffDays / 7)} weeks`, color: 'text-gray-600', bg: 'bg-gray-100' };
   };
@@ -78,7 +78,7 @@ export default function Index({ events, filters }) {
                 setEditingEvent(null);   // Create mode
                 setShowModal(true);
               }}
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl font-semibold shadow-lg hover:scale-105 transition-all"
+               className="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 transition-colors duration-200"
             >
               <PlusIcon className="w-5 h-5 mr-2" />
               Create New Event
@@ -148,17 +148,17 @@ export default function Index({ events, filters }) {
 
                   {/* Date */}
                   <div className="flex items-center text-gray-600 mb-4 p-3 bg-gray-50 rounded-xl">
-                    <CalendarDaysIcon className="w-5 h-5 mr-3 text-indigo-500" />
+                    <CalendarDaysIcon className="w-5 h-5 mr-3 to-purple-600" />
                     <span className="text-sm font-medium">{formatDate(event.start_at)}</span>
                   </div>
 
                   {/* Participation Stats */}
                   <div className="flex items-center justify-between mb-6 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
                     <div className="flex items-center">
-                      <UserGroupIcon className="w-5 h-5 mr-2 text-blue-600" />
-                      <span className="text-sm font-semibold text-blue-800">Participants</span>
+                      <UserGroupIcon className="w-5 h-5 mr-2 to-purple-600" />
+                      <span className="text-sm font-semibold to-purple-600">Participants</span>
                     </div>
-                    <span className="text-lg font-bold text-blue-900">{event.join_count || 0}</span>
+                    <span className="text-lg font-bold to-purple-600">{event.join_count || 0}</span>
                   </div>
 
                   {/* Action Buttons */}
@@ -174,7 +174,7 @@ export default function Index({ events, filters }) {
                           setShowModal(true);
                         }}
                         className="inline-flex items-center px-3 py-1.5 text-sm font-medium 
-                 text-indigo-600 bg-indigo-50 hover:bg-indigo-100 
+                 to-purple-600 bg-indigo-50 hover:bg-indigo-100 
                  rounded-lg transition-all duration-300 hover:shadow-sm 
                  hover:scale-105"
                       >
@@ -186,7 +186,7 @@ export default function Index({ events, filters }) {
                       <a
                         href={route("admin.events.joins", event.id)}
                         className="inline-flex items-center px-3 py-1.5 text-sm font-medium
-                 text-blue-600 bg-blue-50 hover:bg-blue-100
+                 tto-purple-600 bg-blue-50 hover:bg-blue-100
                  rounded-lg transition-all duration-300 hover:shadow-sm
                  hover:scale-105"
                       >

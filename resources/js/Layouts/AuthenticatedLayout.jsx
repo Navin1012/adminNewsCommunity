@@ -8,6 +8,7 @@ import {
   ShieldCheckIcon,
   ArrowRightOnRectangleIcon,
   Bars3Icon,
+  RectangleGroupIcon,
 } from "@heroicons/react/24/outline";
 
 export default function AuthenticatedLayout({ admin, header, children }) {
@@ -36,6 +37,7 @@ export default function AuthenticatedLayout({ admin, header, children }) {
     { name: "Dashboard", route: "admin.dashboard", href: route("admin.dashboard"), icon: <HomeIcon className="w-5 h-5" /> },
     { name: "Users", route: "admin.users.index", href: route("admin.users.index"), icon: <UsersIcon className="w-5 h-5" /> },
     { name: "Events", route: "admin.events.index", href: route("admin.events.index"), icon: <CalendarDaysIcon className="w-5 h-5" /> },
+    { name: "Chapters", route: "chapters.index", href: route("chapters.index"), icon: <RectangleGroupIcon className="w-5 h-5" /> },
     { name: "Role Management", route: "admin.access.index", href: route("admin.access.index"), icon: <ShieldCheckIcon className="w-5 h-5" /> },
   ];
 
@@ -71,31 +73,27 @@ export default function AuthenticatedLayout({ admin, header, children }) {
       >
 
         {/* Navigation */}
-       {/* Navigation */}
-<nav className="px-3 py-4 flex flex-col gap-3">
-
-  
-  {/* Menu Items */}
-  {navigationItems.map((item) => (
-    <NavLink
-      key={item.name}
-      href={item.href}
-      active={route().current(item.route)}
-      className="
-        flex items-center gap-3 px-4 py-3 rounded-xl
-        text-gray-700 hover:bg-gray-100 transition-all font-medium
-      "
-      activeClassName="
-        bg-gradient-to-r from-indigo-100 to-indigo-200
-        text-indigo-700 font-semibold shadow-md
-      "
-    >
-      <div className="w-6 h-6">{item.icon}</div>
-      {sidebarOpen && <span>{item.name}</span>}
-    </NavLink>
-  ))}
-</nav>
-
+        <nav className="px-3 py-4 flex flex-col gap-3">
+          {/* Menu Items */}
+          {navigationItems.map((item) => (
+            <NavLink
+              key={item.name}
+              href={item.href}
+              active={route().current(item.route)}
+              className="
+                flex items-center gap-3 px-4 py-3 rounded-xl
+                text-gray-700 hover:bg-gray-100 transition-all font-medium
+              "
+              activeClassName="
+                bg-gradient-to-r from-gray-800 to-gray-900
+                text-white font-semibold shadow-md
+              "
+            >
+              <div className="w-6 h-6">{item.icon}</div>
+              {sidebarOpen && <span>{item.name}</span>}
+            </NavLink>
+          ))}
+        </nav>
 
         {/* Logout */}
         <div className="mt-auto px-3 py-4 border-t">
@@ -133,13 +131,13 @@ export default function AuthenticatedLayout({ admin, header, children }) {
             <div className="flex items-center gap-4">
               {/* Mobile Menu */}
               <button
-                className="md:hidden p-2 rounded-xl bg-white/70 backdrop-blur-md shadow-md hover:bg-white transition"
+                className="inline-flex items-center p-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 transition-colors duration-200"
                 onClick={() => setMobileOpen(!mobileOpen)}
               >
                 {mobileOpen ? (
                   // X ICON
                   <svg
-                    className="w-6 h-6 text-gray-700"
+                    className="w-5 h-5"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
@@ -149,15 +147,12 @@ export default function AuthenticatedLayout({ admin, header, children }) {
                   </svg>
                 ) : (
                   // BARS ICON
-                  <Bars3Icon className="w-6 h-6 text-gray-700" />
+                  <Bars3Icon className="w-5 h-5" />
                 )}
               </button>
 
-
-            
-
               {/* Brand Title */}
-              <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
+              <span className="text-xl font-bold bg-gradient-to-r from-gray-800 to-gray-900 bg-clip-text text-transparent">
                 News Community
               </span>
             </div>
@@ -169,12 +164,9 @@ export default function AuthenticatedLayout({ admin, header, children }) {
 
             {/* User */}
             <div className="hidden md:flex items-center gap-4">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 
-                text-white flex items-center justify-center font-semibold shadow-lg border border-white/40">
-                {admin.name.charAt(0).toUpperCase()}
-              </div>
 
-              <span className="text-gray-900 font-medium bg-white/50 px-3 py-1 rounded-lg backdrop-blur-md shadow-sm border border-white/30">
+
+              <span className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 transition-colors duration-200">
                 Hi, {admin.name}
               </span>
             </div>

@@ -5,7 +5,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\AdminEventJoinController;
 use App\Http\Controllers\RoleAccessController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ChapterController;
 
 
 // Login Routes
@@ -47,6 +47,13 @@ Route::middleware('auth.admin')->group(function () {
         ->name('admin.access.toggle');
     Route::delete('/access/delete/{id}', [RoleAccessController::class, 'destroy'])
         ->name('admin.access.delete');
+
+    Route::get('/chapters', [ChapterController::class, 'index'])->name('chapters.index');
+    Route::post('/chapters', [ChapterController::class, 'store'])->name('chapters.store');
+    Route::post('/chapters/{id}', [ChapterController::class, 'update'])->name('chapters.update');
+    Route::delete('/chapters/{id}', [ChapterController::class, 'destroy'])->name('chapters.destroy');
+    Route::post('/chapters/{id}/toggle', [ChapterController::class, 'toggle'])->name('chapters.toggle');
+    Route::get('/chapters/{id}/joins', [ChapterController::class, 'joins'])->name('chapters.joins');
 
 });
 
