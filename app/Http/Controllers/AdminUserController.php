@@ -16,8 +16,10 @@ class AdminUserController extends Controller
         }
     }
 
-    public function index(Request $request)
-    {
+   public function index(Request $request)
+{
+    try {
+
         $search = trim($request->q);
 
         $query = User::select([
@@ -34,17 +36,18 @@ class AdminUserController extends Controller
             'email_verified_at',
             'created_at'
         ])
-            ->when($search, function ($q) use ($search) {
-                $q->where(function ($sub) use ($search) {
-                    $sub->where('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhere('mobile_number', 'like', "%{$search}%")
-                        ->orWhere('channel_name', 'like', "%{$search}%");
-                });
-            })
-            ->orderByDesc('created_at');
+        ->when($search, function ($q) use ($search) {
+            $q->where(function ($sub) use ($search) {
+                $sub->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('mobile_number', 'like', "%{$search}%")
+                    ->orWhere('channel_name', 'like', "%{$search}%");
+            });
+        })
+        ->orderByDesc('created_at');
 
-        $users = $query->paginate(15)->through(function ($u) {
+        // Paginate with 15 per page
+        $users = $query->paginate(10)->through(function ($u) {
             return [
                 'id' => (string) ($u->_id ?? $u->id),
                 'name' => $u->name,
@@ -62,10 +65,30 @@ class AdminUserController extends Controller
         });
 
         return Inertia::render('Admin/Users/Index', [
-            'users' => $users,
+            'users'   => $users,
+            'filters' => [
+                'q' => $search,
+            ],
+        ]);
+
+    } catch (\Exception $e) {
+
+        // Optional: log error for developer
+        \Log::error("Users fetch error: " . $e->getMessage());
+
+        // Send fallback safe response
+        return Inertia::render('Admin/Users/Index', [
+            'users'   => [
+                'data'  => [],
+                'links' => [],
+                'total' => 0,
+            ],
             'filters' => ['q' => $search],
+            'error'   => 'Something went wrong while fetching users.',
         ]);
     }
+}
+
 
     public function toggleActive($id)
     {

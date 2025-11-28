@@ -2,21 +2,7 @@ import { useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage, router } from "@inertiajs/react";
 import CreateChapterModal from "@/Components/Chapters/CreateChapterModal";
-import {
-  MagnifyingGlassIcon,
-  PlusIcon,
-  PencilIcon,
-  PowerIcon,
-  TrashIcon,
-  EyeIcon,
-  MapPinIcon,
-  UsersIcon,
-  UserPlusIcon,
-  ChartBarIcon,
-  CheckCircleIcon,
-  NoSymbolIcon,
-  ExclamationTriangleIcon
-} from "@heroicons/react/24/outline";
+import { MapPin, Users, PlusIcon, MoreVertical, Edit3, Trash2, Search, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function Index({ auth, chapters, filters }) {
   const { flash } = usePage().props;
@@ -53,7 +39,7 @@ export default function Index({ auth, chapters, filters }) {
   const activeChapters = chapters.data.filter(ch => ch.status === 'active').length;
   const totalMembers = chapters.data.reduce((sum, ch) => sum + (ch.total_members || 0), 0);
   const totalJoins = chapters.data.reduce((sum, ch) => sum + (ch.join_count || 0), 0);
-
+  const [openDropdownId, setOpenDropdownId] = useState(null);
   return (
     <AuthenticatedLayout
       admin={auth.admin}
@@ -62,233 +48,322 @@ export default function Index({ auth, chapters, filters }) {
       <Head title="Chapters" />
 
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        {/* Header Section */}
-        <div className="md:flex md:items-center md:justify-between mb-8">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-3xl font-bold text-gray-900">Chapters</h1>
-            <p className="mt-2 text-sm text-gray-600">
-              Manage your organization's chapters and their members
-            </p>
-          </div>
-          <div className="mt-4 flex md:mt-0 md:ml-4">
-            <button
-              onClick={() => setOpen(true)}
-             className="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 transition-colors duration-200"
-            >
-              <PlusIcon className="h-5 w-5 mr-2" />
-              Create Chapter
-            </button>
-          </div>
-        </div>
 
-        {/* Flash Message */}
-        {flash.message && (
-          <div className="mb-6 p-4 rounded-lg bg-green-50 border border-green-200 flex items-center">
-            <CheckCircleIcon className="h-5 w-5 text-green-500 mr-2" />
-            <p className="text-green-800 text-sm font-medium">{flash.message}</p>
-          </div>
-        )}
+        {/* 🔍 Search + Add Button Bar */}
+        <div className="flex flex-col sm:flex-row justify-between gap-4 mb-8">
 
-      
+          {/* Search Input */}
+          <form onSubmit={doSearch} className="flex gap-2 w-full sm:w-auto">
+            <div className="relative w-full sm:w-80">
 
-        {/* Search Bar */}
-        <div className="mb-6">
-          <form onSubmit={doSearch} className="flex gap-3">
-            <div className="flex-1 relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
-              </div>
+              {/* Search Icon */}
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                size={18}
+              />
+
+              {/* Input */}
               <input
-                type="search"
-                placeholder="Search chapters by title, location..."
-                className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search chapters..."
+                className="
+      w-full rounded-xl border border-slate-200 bg-white 
+      py-2.5 pl-10 pr-10 text-sm text-slate-800 
+      placeholder-slate-400
+      focus:border-blue-500 focus:ring-1 focus:ring-blue-500 
+      transition-colors outline-none
+      min-w-[260px]
+    "
               />
+
+              {/* Clear (X) Button — shows only when text entered */}
+              {search !== "" && (
+                <button
+                  onClick={() => setSearch("")}
+                  className="
+        absolute right-3 top-1/2 -translate-y-1/2 
+        bg-slate-100 hover:bg-slate-200 
+        text-slate-500 hover:text-slate-700 
+        w-6 h-6 rounded-full flex items-center justify-center 
+        transition
+      "
+                >
+                  ✕
+                </button>
+              )}
             </div>
+
+
+            {/* Search Button */}
             <button
               type="submit"
-              className="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 transition-colors duration-200"
+              className="
+        inline-flex items-center justify-center rounded-xl 
+        font-medium transition-all duration-200 
+        px-4 py-2 text-sm
+        bg-white text-slate-700 border border-slate-200 
+        hover:bg-slate-50 focus:ring-2 focus:ring-slate-300
+      "
             >
-              <MagnifyingGlassIcon className="h-4 w-4 mr-2" />
+              <Search size={16} className="mr-2" />
               Search
             </button>
           </form>
+
+          {/* Add Button */}
+          <button
+            onClick={() => setOpen(true)}
+            className="
+      inline-flex items-center justify-center rounded-xl font-medium
+      px-4 py-2 text-sm transition-all duration-200
+      bg-blue-600 text-white hover:bg-blue-700 
+      focus:outline-none focus:ring-2 focus:ring-blue-500 
+      shadow-md shadow-blue-200
+    "
+          >
+            <PlusIcon className="w-5 h-5 mr-2" />
+            Add Chapter
+          </button>
         </div>
 
-        {/* Chapters Table */}
-        <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-gray-200">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Chapter
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Location
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Members
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Joins
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {chapters.data.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center">
-                      <div className="flex flex-col items-center justify-center">
-                        <ExclamationTriangleIcon className="w-16 h-16 text-gray-400 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">No chapters found</h3>
-                        <p className="text-gray-500 mb-4">Get started by creating your first chapter.</p>
-                        <button
-                          onClick={() => setOpen(true)}
-                        className="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 transition-colors duration-200"
-            > 
-                          <PlusIcon className="h-4 w-4 mr-2" />
-                          Create Chapter
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  chapters.data.map((chapter) => (
-                    <tr key={chapter.id} className="hover:bg-gray-50 transition-colors duration-150">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10">
-                            {chapter.icon ? (
-                              <img
-                                className="h-10 w-10 rounded-lg object-cover border border-gray-200"
-                                src={chapter.icon}
-                                alt={chapter.title}
-                              />
-                            ) : (
-                              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-100 to-blue-200 border border-blue-200 flex items-center justify-center">
-                                <UsersIcon className="w-5 h-5 text-blue-400" />
-                              </div>
-                            )}
-                          </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{chapter.title}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center text-sm text-gray-900">
-                          <MapPinIcon className="h-4 w-4 text-gray-400 mr-1" />
-                          {chapter.state || "N/A"}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center text-sm font-medium text-gray-900">
-                          <UsersIcon className="h-4 w-4 text-gray-400 mr-1" />
-                          {chapter.total_members || 0}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${chapter.status === "active"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
-                            }`}
-                        >
-                          {chapter.status === "active" ? (
-                            <>
-                              <CheckCircleIcon className="w-3 h-3 mr-1" />
-                              Active
-                            </>
-                          ) : (
-                            <>
-                              <NoSymbolIcon className="w-3 h-3 mr-1" />
-                              Inactive
-                            </>
-                          )}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <button
-                          onClick={() => router.get(route("chapters.joins", chapter.id))}
-                          className="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 transition-colors duration-200"
-                        >
-                          <UserPlusIcon className="w-3 h-3 mr-1" />
-                          {chapter.join_count || 0}
-                        </button>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex items-center justify-end space-x-2">
-                          <button
-                            onClick={() => {
-                              setSelectedChapter(chapter);
-                              setOpen(true);
-                            }}
-                            className="inline-flex items-center p-2 border border-gray-300 rounded-md text-gray-600 bg-white hover:bg-gray-50 transition-colors duration-200"
-                            title="Edit Chapter"
-                          >
-                            <PencilIcon className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => toggleStatus(chapter.id)}
-                            className={`inline-flex items-center p-2 border rounded-md transition-colors duration-200 ${chapter.status === "active"
-                                ? "border-gray-300 text-gray-600 bg-white hover:bg-gray-50"
-                                : "border-green-300 text-green-600 bg-green-50 hover:bg-green-100"
-                              }`}
-                            title={chapter.status === "active" ? "Deactivate" : "Activate"}
-                          >
-                            <PowerIcon className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => destroyChapter(chapter.id)}
-                            className="inline-flex items-center p-2 border border-red-300 rounded-md text-red-600 bg-white hover:bg-red-50 transition-colors duration-200"
-                            title="Delete Chapter"
-                          >
-                            <TrashIcon className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
 
-        {/* Pagination */}
-        {chapters.links && chapters.links.length > 4 && (
-          <div className="mt-6 flex items-center justify-between">
-            <div className="text-sm text-gray-700">
-              Showing <span className="font-medium">{(chapters.current_page - 1) * chapters.per_page + 1}</span> to{" "}
-              <span className="font-medium">
-                {Math.min(chapters.current_page * chapters.per_page, chapters.total)}
-              </span>{" "}
-              of <span className="font-medium">{chapters.total}</span> results
-            </div>
-            <div className="flex space-x-1">
-              {chapters.links.map((link, index) => (
+
+        {/* ⭐ PREMIUM CARD GRID (Same as your mock UI) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+          {chapters.data.map((chapter) => (
+            <div
+              key={chapter.id}
+              className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6
+            relative group hover:shadow-lg transition-all duration-200"
+            >
+
+              {/* 3-dot Actions Dropdown */}
+              <td className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition">
+
+                {/* 3-dot button */}
                 <button
-                  key={index}
-                  disabled={!link.url}
-                  onClick={() => link.url && router.visit(link.url)}
-                  dangerouslySetInnerHTML={{ __html: link.label }}
-                  className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md ${link.active
-                      ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
-                      : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
-                    } ${!link.url ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                />
-              ))}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenDropdownId(openDropdownId === chapter.id ? null : chapter.id);
+                  }}
+                  className={`p-1.5 rounded-lg transition-colors ${openDropdownId === chapter.id
+                      ? "bg-blue-50 text-blue-600"
+                      : "text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                    }`}
+                >
+                  <MoreVertical size={20} />
+                </button>
+
+                {/* DROPDOWN MENU */}
+                {openDropdownId === chapter.id && (
+                  <>
+                    {/* background overlay to close dropdown */}
+                    <div
+                      className="fixed inset-0 z-10"
+                      onClick={() => setOpenDropdownId(null)}
+                    />
+
+                    <div className="absolute right-10 top-8 z-50 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-1.5 animate-in fade-in zoom-in-95 duration-200">
+
+                      {/* VIEW / EDIT BUTTON */}
+                      <button
+                        onClick={() => {
+                          setSelectedChapter(chapter);
+                          setOpen(true);
+                        }}
+                        className="w-full text-left px-4 py-2.5 text-sm text-slate-600 
+                     hover:bg-slate-50 hover:text-blue-600 
+                     flex items-center gap-2 transition font-medium"
+                      >
+                        <Edit3 size={16} /> Edit Chapter
+                      </button>
+
+                      {/* JOIN LIST BUTTON  (ADDED HERE) */}
+                      <button
+                        onClick={() => router.get(route("chapters.joins", chapter.id))}
+                        className="w-full text-left px-4 py-2.5 text-sm text-slate-600 
+                     hover:bg-blue-50 hover:text-blue-700
+                     flex items-center gap-2 transition font-medium"
+                      >
+                        <Users size={16} className="text-blue-600" />
+                        View Joins ({chapter.join_count || 0})
+                      </button>
+
+                      <div className="h-px bg-slate-100 my-1" />
+
+                      {/* ACTIVATE / DEACTIVATE */}
+                      <button
+                        onClick={() => toggleStatus(chapter.id)}
+                        className="w-full text-left px-4 py-2.5 text-sm 
+                     flex items-center gap-2 font-medium
+                     hover:bg-slate-50 transition
+                     text-slate-600"
+                      >
+                        <Eye size={16} /> {chapter.status === "active" ? "Deactivate" : "Activate"}
+                      </button>
+
+                      {/* DELETE BUTTON */}
+                      <button
+                        onClick={() => destroyChapter(chapter.id)}
+                        className="w-full text-left px-4 py-2.5 text-sm 
+                     flex items-center gap-2 font-medium
+                     text-red-600 hover:bg-red-50 hover:text-red-700 transition"
+                      >
+                        <Trash2 size={16} /> Delete Chapter
+                      </button>
+
+                    </div>
+                  </>
+                )}
+              </td>
+
+
+              {/* Card Top */}
+              <div className="flex flex-col items-center text-center mb-6">
+                <div className="w-16 h-16  rounded-2xl flex items-center justify-center 
+              text-3xl shadow-inner mb-4">
+                  {chapter.icon ? (
+                    <img src={chapter.icon} className="w-10 h-10 rounded-xl" />
+                  ) : (
+                    <Users className="w-7 h-7 text-blue-500" />
+                  )}
+                </div>
+
+                <h3 className="text-lg font-bold text-slate-800 mb-1">{chapter.title}</h3>
+                <div className="flex items-center text-sm text-slate-500">
+                  <MapPin size={14} className="mr-1" />
+                  {chapter.state || "N/A"}
+                </div>
+              </div>
+
+              {/* Members + Joins */}
+              <div className="flex justify-between items-center py-3 border-t border-b border-slate-100 mb-4">
+                <div className="text-center w-1/2 border-r border-slate-100">
+                  <div className="text-lg font-bold text-slate-800">{chapter.total_members}</div>
+                  <div className="text-xs text-slate-500 uppercase tracking-wide">Members</div>
+                </div>
+
+                <div className="text-center w-1/2">
+                  <div className="text-lg font-bold text-emerald-600">
+                    +{chapter.join_count || 0}
+                  </div>
+                  <div className="text-xs text-slate-500 uppercase tracking-wide">New Today</div>
+                </div>
+              </div>
+
+              {/* Footer - Status + Actions */}
+              <div className="flex justify-between items-center">
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-semibold
+                ${chapter.status === "active"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-gray-100 text-gray-600"
+                    }`}
+                >
+                  {chapter.status === "active" ? "Active" : "Inactive"}
+                </span>
+
+                <div className="flex gap-2">
+                  {/* Edit */}
+                  <button
+                    onClick={() => {
+                      setSelectedChapter(chapter);
+                      setOpen(true);
+                    }}
+                    className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
+                  >
+                    <Edit3 size={16} />
+                  </button>
+
+                  {/* Active Toggle */}
+                  <button
+                    onClick={() => toggleStatus(chapter.id)}
+                    className={`p-1.5 rounded-lg 
+                  ${chapter.status === "active"
+                        ? "text-gray-600 hover:bg-gray-100"
+                        : "text-green-600 hover:bg-green-50"
+                      }`}
+                  >
+                    <Eye size={16} />
+                  </button>
+
+                  {/* Delete */}
+                  <button
+                    onClick={() => destroyChapter(chapter.id)}
+                    className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          ))}
+        </div>
+
+
+        {/* ⭐ Pagination */}
+        {chapters.links.length > 3 && (
+          <div className="mt-10 px-6 py-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-b-2xl">
+
+            {/* Showing X to Y of Z */}
+            <span className="text-sm text-slate-500">
+              Showing{" "}
+              <span className="font-medium text-slate-900">{chapters.from}</span> to{" "}
+              <span className="font-medium text-slate-900">{chapters.to}</span> of{" "}
+              <span className="font-medium text-slate-900">{chapters.total}</span> results
+            </span>
+
+            {/* Pagination Buttons */}
+            <div className="flex items-center gap-2">
+
+              {/* Prev Button */}
+              <button
+                onClick={() => chapters.prev_page_url && router.visit(chapters.prev_page_url)}
+                disabled={!chapters.prev_page_url}
+                className="p-2 rounded-lg hover:bg-white hover:shadow-sm border border-transparent 
+        hover:border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed 
+        transition-all text-slate-600"
+              >
+                <ChevronLeft size={16} />
+              </button>
+
+              {/* Page Numbers */}
+              <div className="flex items-center gap-1">
+                {chapters.links
+                  .filter((l) => !isNaN(Number(l.label))) // numeric pagination only
+                  .map((link, idx) => (
+                    <button
+                      key={idx}
+                      disabled={!link.url}
+                      onClick={() => link.url && router.visit(link.url)}
+                      className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${link.active
+                        ? "bg-blue-600 text-white shadow-sm"
+                        : "text-slate-600 hover:bg-white hover:shadow-sm"
+                        } ${!link.url ? "opacity-40 cursor-not-allowed" : ""}`}
+                    >
+                      {link.label}
+                    </button>
+                  ))}
+              </div>
+
+              {/* Next Button */}
+              <button
+                onClick={() => chapters.next_page_url && router.visit(chapters.next_page_url)}
+                disabled={!chapters.next_page_url}
+                className="p-2 rounded-lg hover:bg-white hover:shadow-sm border border-transparent 
+        hover:border-slate-200 disabled:opacity-50 disabled:cursor-not-allowed 
+        transition-all text-slate-600"
+              >
+                <ChevronRight size={16} />
+              </button>
             </div>
           </div>
         )}
+
 
         {/* Modal */}
         <CreateChapterModal
@@ -296,7 +371,9 @@ export default function Index({ auth, chapters, filters }) {
           onClose={closeModal}
           chapter={selectedChapter}
         />
+
       </div>
     </AuthenticatedLayout>
   );
+
 }

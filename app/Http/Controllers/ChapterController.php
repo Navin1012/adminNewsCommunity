@@ -34,7 +34,7 @@ class ChapterController extends Controller
                 });
             }
 
-            $chapters = $query->paginate(10)->appends($request->query());
+            $chapters = $query->paginate(8)->appends($request->query());
 
             // collect ids only
             $chapterIds = $chapters->pluck('_id')->map(fn($id) => (string) $id)->all();
@@ -206,41 +206,63 @@ class ChapterController extends Controller
 
         return back()->with('success', 'Status updated!');
     }
-    public function joins($id)
-    {
+   public function joins($id)
+{
+    try {
+
         $chapter = Chapter::findOrFail($id);
 
         $joins = ChapterJoin::where('chapter_id', $id)
-            ->get()
-            ->map(function ($join) {
+            ->latest()
+            ->paginate(10)  // pagination added
+            ->through(function ($join) {
 
                 $data = $join->user_data ?? [];
 
                 return [
-                    'id' => $join->id,
-                    'name' => $data['name'] ?? '-',
-                    'email' => $data['email'] ?? '-',
-                    'phone' => $data['mobile_number'] ?? '-',
-                    'address' => $data['address'] ?? '-',
-                    'channel_name' => $data['channel_name'] ?? '-',
+                    'id'          => $join->id,
+                    'name'        => $data['name'] ?? '-',
+                    'email'       => $data['email'] ?? '-',
+                    'phone'       => $data['mobile_number'] ?? '-',
+                    'address'     => $data['address'] ?? '-',
+                    'channel_name'=> $data['channel_name'] ?? '-',
                     'channel_url' => $data['channel_url'] ?? '-',
-                    'premium' => $data['premium'] ?? false,
-                    'active' => $data['active'] ?? false,
+                    'premium'     => $data['premium'] ?? false,
+                    'active'      => $data['active'] ?? false,
                     'payment_status' => $data['payment_status'] ?? '-',
                     'email_verified_at' => $data['email_verified_at'] ?? null,
-                    'created_at' => $join->created_at,
+                    'created_at'  => $join->created_at,
                 ];
             });
 
         return inertia("Chapters/ChapterJoins", [
             "chapter" => [
-                "id" => (string) $chapter->_id,
+                "id"    => (string)$chapter->_id,
                 "title" => $chapter->title,
             ],
             "joins" => $joins,
         ]);
+
+    } catch (\Throwable $e) {
+
+        return redirect()
+            ->route('chapters.index')
+            ->with('error', 'Chapter not found or failed to load joins.');
     }
+}
 
 
+   public function removeuser($id)
+    {
+        $join = ChapterJoin::find($id);
+
+        if (!$join) {
+            return back()->with('error', 'Member not found.');
+        }
+
+        $join->delete();
+
+        return back()->with('success', 'Member removed successfully.');
+    }
 
 }

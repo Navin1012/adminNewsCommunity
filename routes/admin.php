@@ -54,6 +54,7 @@ Route::middleware('auth.admin')->group(function () {
     Route::delete('/chapters/{id}', [ChapterController::class, 'destroy'])->name('chapters.destroy');
     Route::post('/chapters/{id}/toggle', [ChapterController::class, 'toggle'])->name('chapters.toggle');
     Route::get('/chapters/{id}/joins', [ChapterController::class, 'joins'])->name('chapters.joins');
+    Route::delete('/chapters/joins/{join}', [ChapterController::class, 'removeuser'])->name('chapters.joins.remove');
 
 });
 
