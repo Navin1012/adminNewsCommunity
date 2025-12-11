@@ -25,7 +25,8 @@ export default function AuthLayout({ admin, header, children }) {
     { name: "Dashboard", route: "admin.dashboard", icon: <LayoutDashboard size={20} /> },
     { name: "Users", route: "admin.users.index", icon: <Users size={20} /> },
     { name: "Chapters", route: "chapters.index", icon: <MapPin size={20} /> },
-     { name: "Events", route: "admin.events.index", icon: <Calendar size={20} /> },
+    { name: "Events", route: "admin.events.index", icon: <Calendar size={20} /> },
+    { name: "Articles", route: "news.index", icon: <Calendar size={20} /> },
     { name: "Roles & Permissions", route: "admin.access.index", icon: <Shield size={20} /> },
   ];
 

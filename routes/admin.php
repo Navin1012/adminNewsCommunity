@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminEventJoinController;
 use App\Http\Controllers\RoleAccessController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChapterController;
+use App\Http\Controllers\NewsArticleController;
 
 
 // Login Routes
@@ -56,24 +57,26 @@ Route::middleware('auth.admin')->group(function () {
     Route::get('/chapters/{id}/joins', [ChapterController::class, 'joins'])->name('chapters.joins');
     Route::delete('/chapters/joins/{join}', [ChapterController::class, 'removeuser'])->name('chapters.joins.remove');
 
+    Route::get('/news-articles', [NewsArticleController::class, 'index'])->name('news.index');
+    Route::post('/news-articles', [NewsArticleController::class, 'store'])->name('news.store');
+    Route::post('/news-articles/{id}', [NewsArticleController::class, 'update'])->name('news.update');
+    Route::delete('/news-articles/{id}', [NewsArticleController::class, 'destroy'])->name('news.destroy');
+
 });
 
 
-// Only Admin
 Route::middleware(['auth:employee', 'role:admin'])->group(function () {
     Route::get('/admin-panel', function () {
         return "Admin Panel";
     });
 });
 
-// Only Manager + Admin
 Route::middleware(['auth:role', 'role:admin,manager'])->group(function () {
     Route::get('/manage-users', function () {
         return "Users Management";
     });
 });
 
-// Employee
 Route::middleware(['auth:role', 'role:employee'])->group(function () {
     Route::get('/employee/dashboard', function () {
         return "Employee Dashboard";
