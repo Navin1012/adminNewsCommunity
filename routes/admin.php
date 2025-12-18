@@ -7,8 +7,8 @@ use App\Http\Controllers\RoleAccessController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\NewsArticleController;
-
-
+use App\Http\Controllers\FacebookAnalyticsController;
+use App\Http\Controllers\FacebookUserController;
 // Login Routes
 Route::get('/login', [AdminAuthController::class, 'showLogin'])
     ->name('admin.login')
@@ -61,7 +61,9 @@ Route::middleware('auth.admin')->group(function () {
     Route::post('/news-articles', [NewsArticleController::class, 'store'])->name('news.store');
     Route::post('/news-articles/{id}', [NewsArticleController::class, 'update'])->name('news.update');
     Route::delete('/news-articles/{id}', [NewsArticleController::class, 'destroy'])->name('news.destroy');
-
+    
+    Route::get('/social/analysis', [FacebookAnalyticsController::class, 'index'])->name('social.analysis');
+    Route::get('/admin/facebook-users', [FacebookUserController::class, 'index'])->name('facebook.users');
 });
 
 
