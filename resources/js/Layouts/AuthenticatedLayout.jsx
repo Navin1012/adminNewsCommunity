@@ -32,8 +32,9 @@ export default function AuthLayout({ admin, header, children }) {
   ];
 
   const analysisItems = [
-    { name: "Facebook Analytics", route: "facebook.users" },
-    { name: "Chapter Analytics", route: "facebook.users" },
+    { name: "all users Analytics", route: "all.users.analytics" },
+    { name: "Chapter Analytics", route: "chapters.analytics.index" },
+    { name: "Users Analytics", route: "facebook.users" },
   ];
 
 

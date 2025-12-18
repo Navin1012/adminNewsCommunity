@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Models\FacebookUser;
 use App\Models\FacebookPage;
+use App\Models\FacebookAnalytics;
 use Inertia\Inertia;
 use App\Services\FacebookAnalyticsService;
 class FacebookAnalyticsController extends Controller
@@ -59,5 +60,24 @@ public function index(Request $request, FacebookAnalyticsService $fbAnalytics)
         ]
     ));
 }
+ public function allUsersAnalytics(Request $request)
+{
+    
+    $days = (int) $request->get('days', 7);
+    if (!in_array($days, [7, 30, 90])) {
+        $days = 7;
+    }
+
+    $analytics = FacebookAnalytics::first();
+// dd($analytics);
+    return Inertia::render('Social/usersAnalytics', [
+        'analytics' => $analytics,
+        'days'      => $days,
+        'auth'      => [
+            'admin' => auth('admin')->user(),
+        ],
+    ]);
+}
+
 
 }
