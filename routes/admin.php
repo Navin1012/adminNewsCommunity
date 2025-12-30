@@ -18,7 +18,10 @@ Route::get('/login', [AdminAuthController::class, 'showLogin'])
 Route::post('/login', [AdminAuthController::class, 'login'])
     ->name('admin.login.submit')
     ->middleware('guest:admin');
-
+    
+Route::get('/', function () {
+    return redirect()->route('admin.login');
+});
 // Protected Routes
 Route::middleware('auth.admin')->group(function () {
 
@@ -64,7 +67,7 @@ Route::middleware('auth.admin')->group(function () {
     Route::delete('/news-articles/{id}', [NewsArticleController::class, 'destroy'])->name('news.destroy');
 
     Route::get('/social/analysis', [FacebookAnalyticsController::class, 'index'])->name('social.analysis');
-    Route::get('/admin/facebook-users', [FacebookUserController::class, 'index'])->name('facebook.users');
+    Route::get('/facebook-users', [FacebookUserController::class, 'index'])->name('facebook.users');
 
     Route::get('/all-users-analytics', [FacebookAnalyticsController::class, 'allUsersAnalytics'])->name('all.users.analytics');
     Route::get('/chapters-analytics/{chapter}', [ChapterAnalyticsController::class, 'chaptersAnalytics'])->name('chapters.analytics.show');
