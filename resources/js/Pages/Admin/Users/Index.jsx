@@ -15,7 +15,7 @@ import {
   Download,
 } from "lucide-react";
 
-import { Card, Button, Badge, Input } from "@/components/Common";
+import { Card, Button, Badge, Input } from "@/Components/Common";
 
 export default function UsersIndex({ users, filters }) {
   const { props } = usePage();
